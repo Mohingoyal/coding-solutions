@@ -38,9 +38,9 @@ Output: false
 ## Solution
 
 **Language:** C++  
-**Runtime:** 0 ms  
-**Memory:** 8.3 MB  
-**Submitted:** 2026-10-12T13:33:46.882Z  
+**Runtime:** 0 ms (beats 100.00%)  
+**Memory:** 18.6 MB (beats 14.18%)  
+**Submitted:** 2026-10-12T14:02:53.846Z  
 
 ```cpp
 /**
@@ -56,26 +56,26 @@ Output: false
  */
 class Solution {
 public:
-void getarray(TreeNode* root,vector<int> &ary)
-{
-    if(root==NULL)
-    return;
-    getarray(root->left,ary);
-    ary.push_back(root->val);
-    getarray(root->right,ary);
-    return;
+bool mirrortree(TreeNode* root1,TreeNode* root2)
+{bool var;
+    if(root1==NULL&&root2==NULL)
+    return true;
+    if(root1==NULL||root2==NULL)
+    return false;
+    if(root1->val==root2->val)
+    {
+       var= mirrortree(root1->left,root2->right);
+       if(var==false)
+       return false;
+        var=mirrortree(root1->right,root2->left);
+        if(var==false)
+        return false;
+    }
+    else var=false;
+     return var;
 }
     bool isSymmetric(TreeNode* root) {
-        vector<int> ary;
-        getarray(root,ary);
-        if(ary.size()%2==0)
-        return false;
-        for(int i=0;i<ary.size()/2;i++)
-        {
-            if(ary[ary.size()-1-i]!=ary[i])
-            return false;
-        }
-        return true;
+        return mirrortree(root,root);
     }
 };
 ```
