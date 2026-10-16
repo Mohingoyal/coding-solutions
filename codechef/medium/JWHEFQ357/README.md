@@ -1,0 +1,201 @@
+# JWHEFQ357
+
+![Difficulty](https://img.shields.io/badge/Difficulty-Medium-yellow)
+
+## Problem
+
+### Height Balanced Binary Tree
+
+Given a connected binary tree with  **N**  nodes, determine if it is height-balanced. (**Note:**  A binary tree is height-balanced if the depth of the two subtrees of every node never differs by more than one.)
+
+For example, the following binary tree is height balanced:
+
+### Input Format
+- The first line of the input contains a single integer $N$ — the number of nodes in the binary tree.
+- Next $N - 1$ lines contain three space separated characters $p_i, c_i, R_i$, describing the tree with edge informations - $p_i$ is an integer denoting the parent node of the $i$th edge, $c_i$ is child node, and the letter $R_i$ denotes whether the child is left child or right child, it's value is L if $c_i$ is left child of $p_i$, else R.
+### Output Format
+
+Output on the single line, `YES` if the tree is height balanced, else `NO`.
+
+### Constraints
+- $1 \leq N \leq 10000$
+- $1 \leq p_i, c_i \leq 100000$
+- $R_i$ = L or R
+- All $p_i$'s and $c_i$'s are distinct.
+### Sample 1:
+Input
+Output
+
+```
+8
+6 1 L
+7 6 L
+7 8 R
+10 7 L
+10 14 R
+14 13 L
+14 15 R
+```
+
+```
+YES
+```
+
+## Solution
+
+**Language:** c_cpp  
+**Runtime:** N/A  
+**Memory:** N/A  
+**Submitted:** 2026-10-16T10:00:56.307Z  
+
+```c_cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node {
+    int val;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        this->val = val;
+        left = right = NULL;
+    }
+};
+
+class Solution {
+  public:
+  int getleftheight(Node* root)
+  {
+      if(root==NULL)
+      return -1;
+      int recv=getleftheight(root->left);
+      return recv+1;
+  }
+  int getrightheight(Node* root)
+  {
+      if(root==NULL)
+      return -1;
+      int recv2=getrightheight(root->right);
+      return recv2+1;
+  }
+  bool check(Node* root)
+  {
+      if(root==NULL)
+      return true;
+     bool var= check(root->left);
+     if(var==false)
+     return false;
+    int recv1=getleftheight(root);
+    int recv2=getrightheight(root);
+    if(!(abs(recv1-recv2)==0||abs(recv1-recv2)==1))
+    return false;
+    return true;
+  }
+    void isHeightBalanced(Node* root) {
+        // your code goes here
+        // int h1=-1,h2=-1;
+        
+      bool recv1=check(root);
+        if(recv1==true)
+        cout<<"YES"<<endl;
+        else cout<<"NO"<<endl;
+    }
+};
+
+void inOrder(Node* root, vector<int> &nodes){
+    if(root == NULL)
+      return;
+    inOrder(root -> left, nodes);
+    nodes.push_back(root->val);
+    inOrder(root -> right, nodes);
+}
+Node* buildBinaryTree(vector<pair<pair<int, int>, char>>& edges) {
+    map<int, Node*> nodes;
+    set<Node*> children;
+    for (const auto& edge : edges) {
+        int parentVal = edge.first.first;
+        int childVal = edge.first.second;
+        char direction = edge.second;
+        Node* parentNode;
+        Node* childNode;
+        if (nodes.find(parentVal) == nodes.end()) {
+            parentNode = new Node(parentVal);
+            nodes[parentVal] = parentNode;
+        } else {
+            parentNode = nodes[parentVal];
+        }
+        if(nodes.find(childVal) == nodes.end()) {
+            childNode = new Node(childVal);
+            nodes[childVal] = childNode;
+        } else {
+            childNode = nodes[childVal];
+        }
+        if (direction == 'L') {
+            parentNode->left = childNode;
+        } else {
+            parentNode->right = childNode;
+        }
+        children.insert(childNode);
+    }
+    Node* root = NULL;
+    for (const auto& it : nodes) {
+        if (children.find(it.second) == children.end()) {
+            root = it.second;
+            break;
+        }
+    }
+    return root;
+}
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+  
+    int nodes;
+    if (!(cin >> nodes)) return 0;
+    
+    assert(nodes >= 1 && nodes <= 10000);
+    
+    vector<int> bt_nodes;
+    vector<pair<pair<int, int>, char > > edges;
+    set<int> unique_nodes;
+ 
+    for(int i = 1; i < nodes; i++){
+        int p, c;
+        char r;
+        cin >> p >> c >> r;
+        assert(p >= 1 && p <= 100000);
+        assert(c >= 1 && c <= 100000);
+        assert(r == 'L' || r == 'R');
+        unique_nodes.insert(p);
+        unique_nodes.insert(c);
+        edges.push_back({{p, c}, r});
+    }
+    
+    Node* root = NULL;
+    if (nodes == 1) {
+        // N = 1 ?? ??? dummy node create ???? ??? ???? assertions pass ?? ????
+        root = new Node(1);
+        unique_nodes.insert(1);
+        bt_nodes.push_back(1);
+    } else {
+        root = buildBinaryTree(edges);
+        inOrder(root, bt_nodes);
+    }
+    assert(unique_nodes.size() == nodes);
+    assert(bt_nodes.size() == nodes);
+   
+    Solution sol;
+    sol.isHeightBalanced(root);
+    
+    bt_nodes.clear();
+    inOrder(root, bt_nodes);
+    assert(unique_nodes.size() == nodes); 
+    assert(bt_nodes.size() == nodes);
+    return 0;
+}
+```
+
+---
+
+[View on CodeChef](https://www.codechef.com/problems/JWHEFQ357)
