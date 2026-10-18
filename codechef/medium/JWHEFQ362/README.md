@@ -55,7 +55,7 @@ Output
 **Language:** c_cpp  
 **Runtime:** N/A  
 **Memory:** N/A  
-**Submitted:** 2026-10-18T11:19:02.578Z  
+**Submitted:** 2026-10-18T11:22:02.987Z  
 
 ```c_cpp
 #include <iostream>
@@ -114,6 +114,8 @@ class Solution {
   }
     void printBoundary(Node* root) {
         // your code goes here//extreme left leni h
+        if(root==NULL)
+        return;
         getleft(root);
         getnodes(root);
         getright(root->right);
