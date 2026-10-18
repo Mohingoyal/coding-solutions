@@ -54,6 +54,8 @@ class Solution {
   }
     void printBoundary(Node* root) {
         // your code goes here//extreme left leni h
+        if(root==NULL)
+        return;
         getleft(root);
         getnodes(root);
         getright(root->right);
