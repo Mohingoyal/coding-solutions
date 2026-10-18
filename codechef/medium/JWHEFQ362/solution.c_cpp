@@ -1,0 +1,110 @@
+#include <iostream>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+
+using namespace std;
+
+struct Node {
+    int val; 
+    Node *left;
+    Node *right;
+
+    Node(int node_value) {
+        val = node_value;
+        left = right = NULL;
+    }
+};
+
+class Solution {
+  public:
+  void getleft(Node* root)
+  {
+      if(root==NULL)
+      return ;
+      if(root->left!=NULL&&root->right!=NULL)
+      cout<<root->val<<" ";
+      getleft(root->left);
+   
+    return;
+      
+  }
+  void getnodes(Node* root)
+  {
+      if(root==NULL)
+      return;
+      if(root->left==NULL&&root->right==NULL)
+      {
+          cout<<root->val<<" ";
+          return;
+      }
+      getnodes(root->left);
+      getnodes(root->right);
+      return;
+  }
+  void getright(Node* root)
+  {
+      if(root==NULL)
+      return;
+      if(root->left!=NULL&&root->right!=NULL)
+      cout<<root->val<<" ";
+     
+      getright(root->right);
+      return;
+  }
+    void printBoundary(Node* root) {
+        // your code goes here//extreme left leni h
+        getleft(root);
+        getnodes(root);
+        getright(root->right);
+        
+    }
+};
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    int n;
+    if (!(cin >> n)) return 0;
+    
+    Node* root = nullptr;
+    if (n == 1) {
+        root = new Node(1);
+    } else {
+        unordered_map<int, Node*> nodeMap;
+        unordered_set<int> children;
+        
+        for (int i = 0; i < n - 1; ++i) {
+            int p, c;
+            char direction;
+            cin >> p >> c >> direction;
+            
+            if (nodeMap.find(p) == nodeMap.end()) {
+                nodeMap[p] = new Node(p);
+            }
+            if (nodeMap.find(c) == nodeMap.end()) {
+                nodeMap[c] = new Node(c);
+            }
+            
+            if (direction == 'L') {
+                nodeMap[p]->left = nodeMap[c];
+            } else {
+                nodeMap[p]->right = nodeMap[c];
+            }
+            children.insert(c);
+        }
+        
+        for (auto const& [key, val] : nodeMap) {
+            if (children.find(key) == children.end()) {
+                root = val;
+                break;
+            }
+        }
+    }
+    
+    Solution sol;
+    sol.printBoundary(root);
+    
+    return 0;
+}
